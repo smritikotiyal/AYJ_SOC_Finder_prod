@@ -76,7 +76,9 @@ findSoc.addEventListener( "click", function( event ) {
             if ( data[ 'SOC' + i ] ) {
                 var socVal = data[ 'SOC' + i ];
                 var socDesc = data[ 'SOC' + i + '_desc_' + i ] ? data[ 'SOC' + i + '_desc_' + i ] : '';
-                radioHtml += '<div class="suggestion-item"> <div class="box"> <div class="info"> <a href="https://onsdigital.github.io/dp-classification-tools/standard-occupational-classification/data/SingleClass.html?soc='+data[ 'SOC' + i ]+'" target="_blank"><svg class="svg-icon"><use xlink:href="../static/images/svg-sprite.svg#info-circle"></use></svg></a> </div><div class="text"> <label for="radio_'+i+'">'+socVal+', '+socDesc+'<input type="radio" name="s'+i+'" class="radio-input" id="radio_'+i+'" value="'+socVal+'"><span class="checkmark"></span></label> </div></div></div>';
+                radioHtml += '<div class="suggestion-item"> <div class="box"> <div class="info"> <a href="https://onsdigital.github.io/dp-classification-tools/standard-occupational-classification/data/SingleClass.html?soc='+data[ 'SOC' + i ]+'" target="_blank"><svg class="svg-icon"><use xlink:href="../static/images/svg-sprite.svg#info-circle"></use></svg></a> </div>'
+                radioHtml += '<div class="text"> <label for="radio_'+i+'">'+socVal+', '+socDesc+'</br> </br>';
+                radioHtml += '<div class="detail"><details><summary>Eligibility criteria</summary><ul><li>PhD: '+data[ 'SOC' + i + '_phd_' + i ]+'</li><li>ICT and ICGT: '+data[ 'SOC' + i + '_ict_icgt_' + i ]+'</li><li>SW Visa: '+data[ 'SOC' + i + '_eligible_' + i ]+'</li><li>Skill Level: '+data[ 'SOC' + i + '_rqf_' + i ]+'</li><li>NOTE: '+data[ 'SOC' + i + '_note_' + i ]+'</li></ul></details></div><input type="radio" name="s'+i+'" class="radio-input" id="radio_'+i+'" value="'+socVal+'"><span class="checkmark"></span></label></div></div></div>';
                 radioHtmlBox.innerHTML = radioHtml;
 
                 socInput += '<input type="text" name="s'+ i +'" value="' + data[ 'SOC' + i ] + '">';

@@ -382,6 +382,13 @@ textarea.form-control {
 	height: 16px;
 	z-index: 1;
 }
+
+.suggestion-item .detail{
+	text-transform: capitalize;
+	font-size: 12px;
+}
+
+
 .suggestion-item .info .svg-icon{
 	width: 16px;
 	height: 16px;
@@ -394,6 +401,7 @@ textarea.form-control {
 .suggestion-item .box .text {
 	position: relative;
 	height: 100%;
+	text-transform: lowercase;
 }
 .suggestion-item .text input[type="radio"]{
 	position: absolute;

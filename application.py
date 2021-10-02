@@ -18,6 +18,7 @@ import joblib
 
 application = Flask(__name__)
 
+
 basepath = "/var/flask-app/" # os.path.abspath(".")  | "./"
 # basepath = "./"
 
@@ -41,7 +42,6 @@ json_soc = [{}]
 
 
 @application.route('/')
-# @application.route('/findSOC.html')
 @application.route('/findSOC.html')
 def index():
     # Creating Classes List
@@ -172,23 +172,43 @@ def findSOC():
 
             cur = mysql.connection.cursor()
             list_desc = []
+            # Start : V1 : SK1 : 2 OCT 21 : Adding new lists for additional checks 
+            list_phd = []
+            list_ict_icgt = []
+            list_eligiblity = []
+            list_rqf = []
+            list_note = []
+            # End : V1 : SK1
+
             for soc in list_data:
-                resultValue = cur.execute("select Description from AYJ_SOCDescription where SOC = %d;" %soc)
+                resultValue = cur.execute("select Description, PhD, ICT_ICGT, Eligible, Skill_Level, Note from AYJ_SOCDescription where SOC = %d;" %soc)
                 if resultValue > 0:
                     # print(cur.fetchall())
                     availableSOC = cur.fetchall()
                     for i in range(0, len(availableSOC)):
                         list_desc.append(availableSOC[i][0])
+                        # Start : V1 : SK2 : 2 OCT 21 : Adding data to new lists for additional checks 
+                        list_phd.append(availableSOC[i][1])
+                        list_ict_icgt.append(availableSOC[i][2])
+                        list_eligiblity.append(availableSOC[i][3])
+                        list_rqf.append(availableSOC[i][4])
+                        list_note.append(availableSOC[i][5])
+                        # End : V1 : SK2
                     
             cur.close()
             
-            return list_most_prob_soc, list_data, list_desc
+            # Start : V1 : SK3 : 2 OCT 21 : Returning additional lists 
+            return list_most_prob_soc, list_data, list_desc, list_phd, list_ict_icgt, list_eligiblity, list_rqf, list_note
+            # End : V1 : SK3
         
         try:
             if(JD != None):
                 print('inside if')
                 json_dict_soc = {}
-                list_all_soc, list_merged_data, list_merged_desc  = modelPredict(JD)
+
+                # Start : V1 : SK4 : 2 OCT 21 : Calling for the lists 
+                list_all_soc, list_merged_data, list_merged_desc, list_merged_phd, list_merged_ict_icgt, list_merged_eligiblity, list_merged_rqf, list_merged_note = modelPredict(JD)
+                # End : V1 : SK4
                 
                 if(len(list_merged_data) == len(list_merged_desc)):
                     for i in range(1, len(list_merged_data)+1):
@@ -196,6 +216,13 @@ def findSOC():
                         key_d = key + "_desc_" + str(i)
                         json_dict_soc[key] = str(list_merged_data[i-1])
                         json_dict_soc[key_d] = list_merged_desc[i-1]
+                        # Start : V1 : SK5 : 2 OCT 21 : New objects for metadata 
+                        json_dict_soc[key + "_phd_" + str(i)] = list_merged_phd[i-1]
+                        json_dict_soc[key + "_ict_icgt_" + str(i)] = list_merged_ict_icgt[i-1]
+                        json_dict_soc[key + "_eligible_" + str(i)] = list_merged_eligiblity[i-1]
+                        json_dict_soc[key + "_rqf_" + str(i)] = list_merged_rqf[i-1]
+                        json_dict_soc[key + "_note_" + str(i)] = list_merged_note[i-1]
+                        # End : V1 : SK5
                     # json_dict_soc['pid'] = p_id
 
                 for i in range(1, len(list_all_soc)+1):
@@ -275,8 +302,6 @@ def findSOC():
             print("An exception occurred: ", e) 
             return render_template('error.html', error=e)
         
-        
-
         
 if __name__ == '__main__':
     application.run(debug=True)
